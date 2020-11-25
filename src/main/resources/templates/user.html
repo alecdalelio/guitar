@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- nav bar -->
+    <div th:replace="fragments/navbar"></div>
+   
+    <!-- User profile page begins -->
+    <h2>Profile for <span th:text="${user.firstName}"></span> 
+    <span th:text="${user.lastName}"></span> - <span style="color: slateblue">
+    <span th:text="${user.username}"></span></span></h2>
+    
+    <h5>Joined <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy')}"></span></h5>
+
+</body>
+</html>
+
+

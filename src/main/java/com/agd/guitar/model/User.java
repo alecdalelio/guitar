@@ -12,8 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 public class User {
@@ -21,13 +27,28 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private Long id;
+        private Long id;
 
+    @Email(message = "Please provide a valid email")
+    @NotEmpty(message = "Please provide an email")
     private String email;
+
+    @NotEmpty(message = "Please provide a username")
+    @Length(min = 3, message = "Your username must have at least 3 characters")
+    @Length(max = 15, message = "Your username cannot have more than 15 characters")
     private String username;
+
+    @NotEmpty(message = "Please provide a password")
+    @Length(min = 5, message = "Your password must have at least 5 characters")
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
+    
+    @NotEmpty(message = "Please provide your first name")
     private String firstName;
+
+    @NotEmpty(message = "Please provide your last name")
     private String lastName;
+
     private int active;
 
     @CreationTimestamp
@@ -37,6 +58,22 @@ public class User {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), 
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    public User() {
+    }
+
+    public User(Long id, String email, String username, String password, String firstName, String lastName, int active,
+            Date createdAt, Set<Role> roles) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.active = active;
+        this.createdAt = createdAt;
+        this.roles = roles;
+    }
 
     public Long getId() {
         return id;
@@ -115,9 +152,5 @@ public class User {
         return "User [active=" + active + ", createdAt=" + createdAt + ", email=" + email + ", firstName=" + firstName
                 + ", id=" + id + ", lastName=" + lastName + ", password=" + password + ", roles=" + roles
                 + ", username=" + username + "]";
-    }
-
-    public User() {
-    }
-    
+    }    
 }
